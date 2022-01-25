@@ -1,43 +1,37 @@
 import { defineStore } from 'pinia';
 import { Todo } from '@/types/global';
+import { ref } from 'vue';
+const fs = window.require('fs');
 
-export const useTodoStore = defineStore('user', {
-  state: (): Todo[] => ([
-    {
-      id: 1,
-      title: 'title',
-      content: 'content',
-      color: 'default',
-      remindTime: null,
-      deadline: null,
-      repeat: false,
-      repeatTime: null,
-      completion: false,
-      remark: '',
-    },
-    {
-      id: 2,
-      title: 'title2',
-      content: 'content2',
-      color: 'default',
-      remindTime: null,
-      deadline: null,
-      repeat: false,
-      repeatTime: null,
-      completion: false,
-      remark: '',
+export const useTodoStore = defineStore('todo', () => {
+
+  const todos = ref<Todo[]>([]);
+
+  // 加载数据
+  const load = (): void =>  {
+    const todosBuf: string = fs.readFileSync('./public/todo.json', 'utf8');
+    todos.value = todos ? JSON.parse(todosBuf) : [];
+  };
+
+  const add = (todo: Todo): void => {
+    todos.value.push(todo);
+    fs.writeFileSync('./public/todo.json', JSON.stringify(todos.value));
+  };
+
+  const del = (id: number): boolean => {
+    for (let i = 0; i < todos.value.length; i++) {
+      if (todos.value[i].id === id) {
+        todos.value.splice(i, 1);
+        return true;
+      }
     }
-  ]),
+    return false;
+  };
 
-  getters: {
-    userInfo(state: Todo[]): Todo[] {
-      return { ...state };
-    },
-  },
-
-  actions: {
-    add() {},
-
-    del() {},
-  },
+  return {
+    todos,
+    load,
+    add,
+    del
+  }
 });

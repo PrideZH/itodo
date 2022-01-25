@@ -3,7 +3,7 @@ import { Todo } from '@/types/global';
 import { ref } from 'vue';
 import { useTodoStore } from '@/store';
 
-const todos = useTodoStore().$state;
+const todoStore = useTodoStore();
 
 const createTodoVisible = ref<boolean>(false);
 const createTodoForm = ref<Todo>({
@@ -27,7 +27,7 @@ const handleCreateTodo = (): void => {
   <h1>今天计划</h1>
   <el-button @click="createTodoVisible = true">添加计划</el-button>
   <el-button>清空已完成</el-button>
-  <div v-for="todo in todos" :key="todo.id">
+  <div v-for="todo in todoStore.todos" :key="todo.id">
     {{ todo.title }}
     {{ todo.content }}
   </div>

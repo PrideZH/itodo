@@ -13,16 +13,31 @@ export const useTodoStore = defineStore('todo', () => {
     todos.value = todos ? JSON.parse(todosJson) : [];
   };
 
-  const add = (todo: Todo): void => {
+  const save = (): void => {
     fs.writeFileSync('./public/todo.json', JSON.stringify(todos.value, null,"\t"));
-    todos.value.push(todo);
   };
+
+  const add = (todo: Todo): void => {
+    todos.value.push(todo);
+    save();
+  };
+
+  const set = (todo: Todo): boolean => {
+    for (let i = 0; i < todos.value.length; i++) {
+      if (todos.value[i].id === todo.id) {
+        todos.value[i] = todo;
+        save();
+        return true;
+      }
+    }
+    return false;
+  }
 
   const del = (id: number): boolean => {
     for (let i = 0; i < todos.value.length; i++) {
       if (todos.value[i].id === id) {
         todos.value.splice(i, 1);
-        fs.writeFileSync('./public/todo.json', JSON.stringify(todos.value, null,"\t"));
+        save();
         return true;
       }
     }
@@ -32,7 +47,9 @@ export const useTodoStore = defineStore('todo', () => {
   return {
     todos,
     load,
+    save,
     add,
+    set,
     del
   }
 });

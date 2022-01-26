@@ -73,10 +73,7 @@ const handleConfirm = (): void => {
         <el-input v-model="todoForm.content"></el-input>
       </el-form-item>
       <el-form-item label="截止时间">
-        <el-date-picker
-          v-model="todoForm.deadline"
-          type="datetime"
-        />
+        <el-date-picker v-model="todoForm.deadline" type="datetime" />
       </el-form-item>
       <el-form-item label="提醒">
         <el-switch v-model="todoForm.remind" />

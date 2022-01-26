@@ -6,7 +6,7 @@ import Drawer from './components/Drawer.vue';
 
 const todoStore = useTodoStore();
 
-const drawer = ref<any>();
+const drawer = ref<InstanceType<typeof Drawer>>();
 
 const dateFormat = (date: Date): string => {
   date = new Date(date);
@@ -26,7 +26,7 @@ const dateFormat = (date: Date): string => {
 
 <template>
   <h1>计划</h1>
-  <el-button @click="drawer.open()">添加计划</el-button>
+  <el-button @click="drawer?.open(null)">添加计划</el-button>
   <el-card v-for="todo in todoStore.todos" :key="todo.id" size="large">
     <div class="todo-item">
       <el-checkbox v-model="todo.completion"/>
@@ -34,7 +34,7 @@ const dateFormat = (date: Date): string => {
         <div class="todo-content">{{ todo.content }}</div>
         <div class="todo-time" v-if="todo.deadline"><el-icon><calendar /></el-icon>{{ dateFormat(todo.deadline) }}</div>
       </div>
-      <el-button type="primary" :icon="Edit" size="small" circle @click="drawer.open(todo)" />
+      <el-button type="primary" :icon="Edit" size="small" circle @click="drawer?.open(todo)" />
       <el-button type="danger" :icon="Delete" size="small" circle @click="todoStore.del(todo.id)" />
     </div>
   </el-card >

@@ -4,9 +4,9 @@ export interface Todo {
   deadline: Date | null, // 截止时间
   color: string | 'default', // 计划列表项颜色
   remind: Boolean, // 是否提醒
-  remindTime: Date | null, // 提醒时间
+  remindTimeAgo: number, // 提前几分钟提醒
   repeat: Boolean, // 是否重复
-  repeatTime: Date | null, // 重复时间
+  repeatTime: number, // 重复间隔时间 （分钟）
   completion: Boolean, // 是否完成
   remark: string // 备注
 }

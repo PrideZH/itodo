@@ -19,7 +19,10 @@ const createTodoForm = ref<Todo>({
   remark: '',
 });
 const handleCreateTodo = (): void => {
-
+  const todo: Todo = {...createTodoForm.value };
+  todo.id = new Date().getTime();
+  todoStore.add(todo);
+  createTodoVisible.value = false;
 };
 </script>
 

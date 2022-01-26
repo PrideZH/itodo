@@ -61,6 +61,6 @@ const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name
   padding: 32px;
   margin: 0;
   border-radius: 8px;
-  background-color: #2b767c;
+  background-color: #eee;
 }
 </style>

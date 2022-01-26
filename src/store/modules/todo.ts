@@ -9,19 +9,20 @@ export const useTodoStore = defineStore('todo', () => {
 
   // 加载数据
   const load = (): void =>  {
-    const todosBuf: string = fs.readFileSync('./public/todo.json', 'utf8');
-    todos.value = todos ? JSON.parse(todosBuf) : [];
+    const todosJson: string = fs.readFileSync('./public/todo.json', 'utf8');
+    todos.value = todos ? JSON.parse(todosJson) : [];
   };
 
   const add = (todo: Todo): void => {
+    fs.writeFileSync('./public/todo.json', JSON.stringify(todos.value, null,"\t"));
     todos.value.push(todo);
-    fs.writeFileSync('./public/todo.json', JSON.stringify(todos.value));
   };
 
   const del = (id: number): boolean => {
     for (let i = 0; i < todos.value.length; i++) {
       if (todos.value[i].id === id) {
         todos.value.splice(i, 1);
+        fs.writeFileSync('./public/todo.json', JSON.stringify(todos.value, null,"\t"));
         return true;
       }
     }

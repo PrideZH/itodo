@@ -25,7 +25,9 @@ const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name
           {{ menuItem.meta?.locale || '' }}
         </el-menu-item>
       </el-menu>
-      <div class="tool"></div>
+      <div class="tool">
+        v0.0.1
+      </div>
     </el-aside>
     <el-main class="main">
       <router-view />

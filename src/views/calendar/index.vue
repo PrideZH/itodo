@@ -29,7 +29,7 @@ onMounted(() => {
     <template #dateCell="{ data }">
       {{ data.date.getDate() }}
       <div v-if="todoMap.get(data.day)" v-for="todo in todoMap.get(data.day)" :key="todo.id">
-        <el-tag size="small">{{ todo.content }}</el-tag>
+        <el-tag size="small">{{ todo.title }}</el-tag>
       </div>
     </template>
   </el-calendar>

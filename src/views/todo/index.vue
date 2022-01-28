@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AlarmClock, Calendar, Delete, Edit, Refresh } from '@element-plus/icons-vue'
+import { AlarmClock, Calendar, Delete, Document, Edit, Refresh } from '@element-plus/icons-vue'
 import { useTodoStore } from '@/store';
 import { computed, ref } from 'vue';
 import Drawer from './components/Drawer.vue';
@@ -29,7 +29,6 @@ const dateFormat = (date: Date): string => {
   res += ':' + date.getMinutes();
   return res;
 };
-
 </script>
 
 <template>
@@ -39,7 +38,7 @@ const dateFormat = (date: Date): string => {
     <div class="todo-item">
       <el-checkbox v-model="todo.completion"/>
       <div class="todo-body">
-        <div :class="{'todo-content': true, 'todo-content-finish': todo.completion}">{{ todo.content }}</div>
+        <div :class="{'todo-content': true, 'todo-content-finish': todo.completion}">{{ todo.title }}</div>
         <div class="todo-folder">
           <div
             :class="{'todo-time': true, 'todo-time-timeout': !todo.completion && isTimeout(todo.deadline)}"
@@ -50,6 +49,12 @@ const dateFormat = (date: Date): string => {
           </div>
           <el-icon v-if="todo.remind" style="margin-left: 8px;"><alarm-clock /></el-icon>
           <el-icon v-if="todo.repeat" style="margin-left: 8px;"><refresh /></el-icon>
+          <el-popover trigger="hover" placement="bottom-start">
+            <template #reference>
+              <el-icon v-if="todo.content.trim() !== ''" style="margin-left: 8px;"><document /></el-icon>
+            </template>
+            {{ todo.content }}
+          </el-popover>
         </div>
       </div>
       <el-button type="primary" :icon="Edit" size="small" circle @click="drawer?.open(todo)" />
@@ -68,6 +73,7 @@ const dateFormat = (date: Date): string => {
 
 .el-card {
   margin: 8px 0;
+  min-width: 400px;
 }
 
 .todo-body {

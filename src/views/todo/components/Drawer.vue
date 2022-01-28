@@ -8,6 +8,7 @@ const todoStore = useTodoStore();
 
 const todoDefault: Todo = {
   id: 0,
+  title: '',
   content: '',
   color: 'default',
   remind: false,
@@ -15,8 +16,7 @@ const todoDefault: Todo = {
   deadline: null,
   repeat: false,
   repeatTime: 15,
-  completion: false,
-  remark: '',
+  completion: false
 };
 
 const visible = ref<boolean>(false);
@@ -58,7 +58,8 @@ const handleConfirm = (): void => {
         todo.id = new Date().getTime();
         todoStore.add(todo);
       } else {
-        todoStore.set(todoForm.value);
+        const todo: Todo = { ...todoForm.value };
+        todoStore.set(todo);
       }
       visible.value = false;
     }
@@ -69,8 +70,8 @@ const handleConfirm = (): void => {
 <template>
   <el-drawer v-model="visible" :title="model === 'create' ? '添加计划' : '修改计划'">
     <el-form ref="fromRef" :model="todoForm" :rules="rules">
-      <el-form-item label="内容" prop="content">
-        <el-input v-model="todoForm.content"></el-input>
+      <el-form-item label="标题" prop="title">
+        <el-input v-model="todoForm.title"></el-input>
       </el-form-item>
       <el-form-item label="截止时间">
         <el-date-picker v-model="todoForm.deadline" type="datetime" />
@@ -88,7 +89,7 @@ const handleConfirm = (): void => {
         <el-input-number v-model="todoForm.repeatTime" :min="1" controls-position="right" />
       </el-form-item>
       <el-form-item label="备注">
-        <el-input v-model="todoForm.remark" type="textarea" />
+        <el-input v-model="todoForm.content" type="textarea" />
       </el-form-item>
     </el-form>
 

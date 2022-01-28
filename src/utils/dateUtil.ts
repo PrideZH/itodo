@@ -1,3 +1,7 @@
+export const SECONDS = 1000
+export const MINUTES = SECONDS * 60
+export const HOURS = MINUTES * 60
+
 /**
  * 时间格式化
  * @param date 时间

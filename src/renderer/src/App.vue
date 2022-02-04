@@ -1,10 +1,29 @@
 <script setup lang="ts">
-import { useTodoStore } from './store';
+import { MINUTES } from './utils/dateUtil';
+import { computed } from 'vue';
+import { notice } from './utils/noticeUtil';
+import { useTaskStore } from './store';
 
-const todoStore = useTodoStore();
+const taskStore = useTaskStore();
+const tasks = computed(() => taskStore.getTasks);
 
-// 加载数据
-todoStore.load();
+// 在整分启动定时 每一分钟检测事件
+setTimeout(() => {
+  setInterval(() => {
+    const nowDate = new Date();
+    tasks.value.forEach(task => {
+      if (!task.enable || task.dateTime === undefined) return;
+      if (task.dateTime <= nowDate) {
+        notice('任务提醒', task.content || '');
+        if (task.repeat === undefined || task.repeat === 0) {
+          taskStore.del(task.id);
+        } else {
+          taskStore.set(task);
+        }
+      }
+    });
+  }, MINUTES);
+}, MINUTES - new Date().getMilliseconds());
 </script>
 
 <template>

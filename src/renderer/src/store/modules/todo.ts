@@ -32,7 +32,8 @@ export const useTodoStore = defineStore('todo', () => {
     return false;
   }
 
-  const del = (id: number): boolean => {
+  const del = (id: number | undefined): boolean => {
+    if (id === undefined) return false;
     for (let i = 0; i < todos.value.length; i++) {
       if (todos.value[i].id === id) {
         todos.value.splice(i, 1);

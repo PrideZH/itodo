@@ -9,14 +9,14 @@ const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name
 
 <template>
   <el-container class="container">
-    <el-aside class="aside" width="256px">
-      <!-- <div class="introduce">
+    <!-- <el-aside class="aside" width="256px">
+      <div class="introduce">
         <el-avatar src="https://empty">
           <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
         </el-avatar>
         Nickname
         Username
-      </div> -->
+      </div>
       <div class="search">
         <el-input placeholder="搜索" :suffix-icon="Search" />
       </div>
@@ -28,7 +28,7 @@ const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name
       <div class="tool">
         v0.0.1
       </div>
-    </el-aside>
+    </el-aside> -->
     <el-main class="main">
       <router-view />
     </el-main>

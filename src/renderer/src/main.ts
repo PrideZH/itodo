@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import 'element-plus/theme-chalk/el-message.css';
+
 const app = createApp(App);
 
 app.use(router);

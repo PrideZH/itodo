@@ -61,6 +61,12 @@ const handleConfirm = (): void => {
       <el-form-item label="重复间隔">
         <el-input-number :min="0" v-model="form.repeat" />
       </el-form-item>
+      <el-form-item label="事件">
+        <el-checkbox label="弹窗提醒" />
+        <el-checkbox label="播放声音" />
+        <el-checkbox label="打开网页" />
+        <el-checkbox label="打开文件" />
+      </el-form-item>
     </el-form>
 
     <template #footer>

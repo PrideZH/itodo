@@ -4,6 +4,5 @@ import { useTodoStore } from './modules/todo';
 
 const pinia = createPinia();
 
-export { useTodoStore };
-export { useTaskStore }
+export { useTodoStore, useTaskStore }
 export default pinia;

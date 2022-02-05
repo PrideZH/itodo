@@ -1,58 +1,40 @@
 <script setup lang="ts">
-import { Todo } from '../../types/global';
-import { onMounted, ref } from 'vue';
-import { useTodoStore } from '../../store';
-import { MINUTES, SECONDS } from '../../utils/dateUtil';
-import { notice } from '../../utils/noticeUtil';
+import Drawer from './components/Drawer.vue';
+import ListItem from '../../components/ListItem.vue';
+import { Calendar, Delete, Edit } from '@element-plus/icons-vue'
+import { computed, ref } from 'vue';
+import { dateFormat } from '../../utils/dateUtil';
+import { useAffairStore } from '../../store';
 
-const todoStore = useTodoStore();
+const drawer = ref<InstanceType<typeof Drawer>>();
 
-const recentlyTodo = ref<Todo>();
-const recentlyTodoTimes = ref<number>();
-
-onMounted(() => {
-  //launchTimer();
-});
-
-// const launchTimer = () => {
-//   recentlyTodo.value = undefined;
-//   recentlyTodoTimes.value = undefined;
-
-//   todoStore.todos.forEach((todo: Todo) => {
-//     if (todo.deadline && todo.remind) {
-//       const remindTime: number = new Date(todo.deadline).getTime() - todo.remindTimeAgo * MINUTES;
-//       if (remindTime < new Date().getTime()) return;
-//       if (recentlyTodo.value && recentlyTodo.value.deadline
-//           && remindTime > recentlyTodo.value.deadline.getTime() - recentlyTodo.value.remindTimeAgo * MINUTES) {
-//         recentlyTodo.value = todo;
-//       } else {
-//         recentlyTodo.value = todo;
-//       }
-//     }
-//   });
-
-//   // 倒计时
-//   if (recentlyTodo.value ) recentlyTodo.value = recentlyTodo.value as Todo;
-//   if (recentlyTodo.value && recentlyTodo.value.deadline) {
-//     recentlyTodoTimes.value = Math.floor((
-//         new Date(recentlyTodo.value.deadline).getTime() - recentlyTodo.value.remindTimeAgo * MINUTES
-//         - new Date().getTime()) / SECONDS);
-//     const timer = setInterval(() => {
-//       if (recentlyTodoTimes.value === 0 || recentlyTodoTimes.value === undefined) {
-//         if (recentlyTodo.value) notice(recentlyTodo.value.title, recentlyTodo.value.content);
-//         clearInterval(timer)
-//         launchTimer();
-//         return;
-//       }
-//       recentlyTodoTimes.value--;
-//     }, 1000)
-//   }
-// };
+const affairStore = useAffairStore();
+const affairs = computed(() => affairStore.getAffairs);
 </script>
 
 <template>
+  <el-button @click="drawer?.open(null)">添加任务</el-button>
 
+  <ListItem v-for="affair in affairs" :key="affair.id">
+    <div>{{ affair.content }}</div>
+    <div class="time" v-if="affair.dateTime">
+      <el-icon><Calendar /></el-icon>
+      {{ dateFormat(affair.dateTime[0], 'yyyy-MM-dd hh:mm') }} - {{ dateFormat(affair.dateTime[1], 'yyyy-MM-dd hh:mm')}}
+    </div>
+    <template #footer>
+      <el-button type="primary" :icon="Edit" size="small" circle @click="drawer?.open(affair)" />
+      <el-button type="danger" :icon="Delete" size="small" circle @click="affairStore.del(affair.id)" />
+    </template>
+  </ListItem>
+
+  <Drawer ref="drawer" />
 </template>
 
-<style>
+<style scoped>
+.time {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #5e5e5e;
+}
 </style>

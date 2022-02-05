@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Delete, Edit } from '@element-plus/icons-vue'
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useTodoStore } from '../../store';
 import Drawer from './components/Drawer.vue';
 import ListItem from '../../components/ListItem.vue';
 
 const todoStore = useTodoStore();
+const todos = computed(() => todoStore.getTodos);
 
 const drawer = ref<InstanceType<typeof Drawer>>();
 </script>
@@ -13,7 +14,7 @@ const drawer = ref<InstanceType<typeof Drawer>>();
 <template>
   <el-button @click="drawer?.open(null)">添加计划</el-button>
 
-  <ListItem v-for="todo in todoStore.todos" :key="todo.id">
+  <ListItem v-for="todo in todos" :key="todo.id">
     <template #header>
       <el-checkbox v-model="todo.completion" @change="todoStore.set(todo)"/>
     </template>

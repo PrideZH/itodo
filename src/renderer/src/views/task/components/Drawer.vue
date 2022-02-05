@@ -58,7 +58,7 @@ const handleConfirm = (): void => {
       <el-form-item label="提醒时间">
         <el-date-picker v-model="form.dateTime" type="datetime" />
       </el-form-item>
-      <el-form-item label="重复间隔">
+      <el-form-item label="重复间隔（分）">
         <el-input-number :min="0" v-model="form.repeat" />
       </el-form-item>
       <el-form-item label="事件">

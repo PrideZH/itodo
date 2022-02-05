@@ -12,7 +12,7 @@ export const useTodoStore = defineStore('todo', {
   },
 
   getters: {
-    getTasks(state: TodoState): Todo[] {
+    getTodos(state: TodoState): Todo[] {
       return state.todos;
     },
   },

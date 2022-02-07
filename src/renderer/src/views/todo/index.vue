@@ -44,11 +44,6 @@ const onEdit = (todo: Todo) => drawer.value?.open(todo);
 </template>
 
 <style scoped>
-.content-completion {
-  color: #999999;
-  text-decoration: line-through;
-}
-
 .main {
   margin-top: 16px;
 }

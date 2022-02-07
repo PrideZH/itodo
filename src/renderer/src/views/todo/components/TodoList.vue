@@ -24,8 +24,17 @@ const emits = defineEmits(['onEdit']);
       <el-checkbox v-model="todo.completion" @change="todoStore.set(todo)"/>
     </template>
     <span :class="{'content-completion': todo.completion}">
-      <span v-if="todo.group !== '' && todo.group !== undefined">【{{ todo.group }}】</span>
-      {{ todo.content }}
+      <div>
+        <span v-if="todo.group !== '' && todo.group !== undefined">【{{ todo.group }}】</span>
+        <span>{{ todo.content }}</span>
+      </div>
+      <el-image
+        class="img"
+        v-for="url in todo.imageUrl"
+        :src="url"
+        :preview-src-list="todo.imageUrl"
+        fit="cover"
+      />
     </span>
     <template #footer>
       <el-button type="primary" :icon="Edit" size="small" circle @click="emits('onEdit', todo)" />
@@ -37,3 +46,18 @@ const emits = defineEmits(['onEdit']);
     </template>
   </ListItem>
 </template>
+
+<style scoped>
+.content-completion {
+  color: #999999;
+  text-decoration: line-through;
+}
+
+.img {
+  width: 64px;
+  height: 64px;
+  margin-right: 16px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+</style>

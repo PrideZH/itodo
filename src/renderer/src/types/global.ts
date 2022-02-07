@@ -3,6 +3,7 @@ export interface Todo {
   content?: string;
   group?: string;
   completion?: boolean;
+  imageUrl: string[];
 }
 
 export interface Affair {

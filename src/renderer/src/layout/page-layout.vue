@@ -23,7 +23,7 @@ const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name
       <el-menu class="menu" router>
         <el-menu-item v-for="menuItem in rootRoute.children" :key="menuItem.path" :index="`/${menuItem.path}`">
           <el-icon><svg viewBox="0 0 1024 1024">
-            <path v-for="(iconSvg, index) in menuItem.meta?.icon" :key="index" fill="currentColor" :d="iconSvg"></path>
+            <path v-for="(iconSvg, index) in (menuItem.meta?.icon as string[])" :key="index" fill="currentColor" :d="iconSvg"></path>
           </svg></el-icon>
           <span>{{ menuItem.meta?.locale || '' }}</span>
         </el-menu-item>
@@ -63,6 +63,6 @@ const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name
   padding: 32px;
   margin: 0;
   border-radius: 8px;
-  background-color: #eee;
+  background-color: #cde2e9;
 }
 </style>

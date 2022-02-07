@@ -7,7 +7,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: 'task',
+      redirect: 'todo',
     },
     {
       name: "root",
@@ -19,7 +19,7 @@ const router = createRouter({
           name: 'todo',
           component: () => import('../views/todo/index.vue'),
           meta: {
-            locale: '计划',
+            locale: '待办',
             icon: ['M704 192h160v736H160V192h160v64h384v-64zM288 512h448v-64H288v64zm0 256h448v-64H288v64zm96-576V96h256v96H384z']
           }
         },

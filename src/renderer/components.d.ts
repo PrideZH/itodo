@@ -5,9 +5,12 @@
 declare module 'vue' {
   export interface GlobalComponents {
     ElAside: typeof import('element-plus/es')['ElAside']
+    ElAutocomplete: typeof import('element-plus/es')['ElAutocomplete']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
+    ElCollapse: typeof import('element-plus/es')['ElCollapse']
+    ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
@@ -19,6 +22,7 @@ declare module 'vue' {
     ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
+    ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
     ListItem: typeof import('./src/components/ListItem.vue')['default']
   }
 }

@@ -1,29 +1,44 @@
 <script setup lang="ts">
-import { Delete, Edit } from '@element-plus/icons-vue'
 import { computed, ref } from 'vue';
-import { useTodoStore } from '../../store';
 import Drawer from './components/Drawer.vue';
-import ListItem from '../../components/ListItem.vue';
+import { Todo } from '../../types/global';
+import { useTodoStore } from '../../store';
+import TodoList from './components/TodoList.vue';
 
 const todoStore = useTodoStore();
-const todos = computed(() => todoStore.getTodos);
 
 const drawer = ref<InstanceType<typeof Drawer>>();
+
+const active = ['do'];
+
+const doList = computed(() => todoStore.getTodos.filter((item: Todo) => !item.completion));
+const doneList = computed(() => todoStore.getTodos.filter((item: Todo) => item.completion));
+
+const onEdit = (todo: Todo) => drawer.value?.open(todo);
 </script>
 
 <template>
   <el-button @click="drawer?.open(null)">添加计划</el-button>
 
-  <ListItem v-for="todo in todos" :key="todo.id">
-    <template #header>
-      <el-checkbox v-model="todo.completion" @change="todoStore.set(todo)"/>
-    </template>
-    <span :class="{'content-completion': todo.completion}">{{ todo.content }}</span>
-    <template #footer>
-      <el-button type="primary" :icon="Edit" size="small" circle @click="drawer?.open(todo)" />
-      <el-button type="danger" :icon="Delete" size="small" circle @click="todoStore.del(todo.id)" />
-    </template>
-  </ListItem>
+  <el-collapse class="main" v-model="active">
+    <el-collapse-item class="collapse-item" name="do">
+      <template #title>
+        <span class="title">在进行 ({{ doList.length }})</span>
+      </template>
+      <TodoList :data="doList" @on-edit="onEdit" />
+    </el-collapse-item>
+    <!-- <el-collapse-item class="collapse-item" name="todo">
+      <template #title>
+        <span class="title">未开始 ({{ doList.length }})</span>
+      </template>
+    </el-collapse-item> -->
+    <el-collapse-item class="collapse-item" name="done">
+      <template #title>
+        <span class="title">已完成 ({{ doneList.length }})</span>
+      </template>
+      <TodoList :data="doneList" @on-edit="onEdit" />
+    </el-collapse-item>
+  </el-collapse>
 
   <Drawer ref="drawer" />
 </template>
@@ -32,5 +47,35 @@ const drawer = ref<InstanceType<typeof Drawer>>();
 .content-completion {
   color: #999999;
   text-decoration: line-through;
+}
+
+.main {
+  margin-top: 16px;
+}
+
+.main > .el-collapse {
+  border-top: none;
+}
+
+.main >>> .el-collapse-item__header, .main >>> .el-collapse-item__wrap {
+  background-color: #cde2e9;
+}
+
+.main >>> .el-collapse-item__header {
+  border-bottom: 1px solid #7993a2;
+}
+
+.main >>> .el-collapse-item__wrap {
+  border-bottom: none;
+}
+
+.title {
+  color: #29262e;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.main >>> .el-collapse-item__header:hover .title {
+  color: #4e606c;
 }
 </style>

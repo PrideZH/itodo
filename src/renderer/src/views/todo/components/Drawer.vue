@@ -74,13 +74,13 @@ const handleConfirm = () => {
 };
 
 const groups = (queryString: string, cb: any) => {
-  const res: {value: string}[] = [];
+  const res: string[] = [];
   todos.value.forEach(todo => {
-    if (todo.group !== '' && todo.group !== undefined && res.indexOf({value:todo.group}) === -1) {
-      res.push({value: todo.group});
+    if (todo.group !== '' && todo.group !== undefined && res.indexOf(todo.group) === -1) {
+      res.push(todo.group);
     }
   });
-  cb(res);
+  cb(res.map(item => ({value: item})));
 }
 </script>
 

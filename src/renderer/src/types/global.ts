@@ -2,8 +2,9 @@ export interface Todo {
   id: number;
   content: string;
   group: string | null;
-  completion: boolean;
   imageUrl: string[];
+  completion: boolean;
+  completionTime: Date | null;
 }
 
 export interface Affair {

@@ -2,11 +2,20 @@ import { defineStore } from 'pinia';
 import { Todo } from '../../../types/global';
 import { TodoState } from './types';
 
+const cmp = (a: Todo, b: Todo) => {
+  if (a.completionTime === null) return 1;
+  if (b.completionTime === null) return -1;
+  return b.completionTime.getTime() - a.completionTime.getTime();
+}
+
 export const useTodoStore = defineStore('todo', {
   state: (): TodoState => {
     // 获取数据
     const todoJson: string | null = localStorage.getItem('todo');
     const todos: Todo[] = todoJson ? JSON.parse(todoJson) : [];
+    todos.forEach(todo => todo.completionTime !== null ? todo.completionTime = new Date(todo.completionTime) : null);
+
+    todos.sort(cmp);
 
     return { todos }
   },
@@ -24,7 +33,7 @@ export const useTodoStore = defineStore('todo', {
     },
 
     add(todo: Todo) {
-      this.todos.push(todo);
+      this.todos.unshift(todo);
       localStorage.setItem('todo', JSON.stringify(this.todos));
     },
 
@@ -33,6 +42,7 @@ export const useTodoStore = defineStore('todo', {
         if (this.todos[i].id === todo.id) {
           this.todos[i] = todo;
           localStorage.setItem('todo', JSON.stringify(this.todos));
+          this.todos.sort(cmp);
           return true;
         }
       }

@@ -12,8 +12,9 @@ const createTodoDefault = (): Todo => ({
   id: 0,
   content: '',
   group: '',
+  imageUrl: [],
   completion: false,
-  imageUrl: []
+  completionTime: null
 });
 
 const visible = ref<boolean>(false);

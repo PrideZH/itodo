@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useTodoStore } from '../../../store';
 import { ElMessage } from 'element-plus';
 import { Todo } from 'src/renderer/src/types/global';
@@ -25,8 +25,12 @@ const open = (todo: Todo | null) => {
   if (todo !== null) {
     model = 'update';
     form.value = { ...todo };
-  } else if (form.value.id !== 0) {
-    form.value = createTodoDefault();
+  } else {
+    model = 'create';
+    // 上一次为编辑时时重置数据 为添加时保留数据
+    if (form.value.id !== 0) {
+      form.value = createTodoDefault();
+    }
   }
   visible.value = true;
 };
@@ -60,13 +64,14 @@ const closed = () => {
 
 const handleConfirm = () => {
   if (form.value.content?.trim() === '') {
-    ElMessage.warning("标题不能为空"); return;
+    ElMessage.warning("内容不能为空"); return;
   }
   const todo: Todo = { ...form.value };
   if (model === 'create') {
     todo.id = new Date().getTime();
     todoStore.add(todo);
     form.value = createTodoDefault();
+    ElMessage.success('添加成功');
   } else {
     todoStore.set(todo);
   }
@@ -76,7 +81,7 @@ const handleConfirm = () => {
 const groups = (queryString: string, cb: any) => {
   const res: string[] = [];
   todos.value.forEach(todo => {
-    if (todo.group !== '' && todo.group !== undefined && res.indexOf(todo.group) === -1) {
+    if (todo.group !== '' && todo.group !== null && res.indexOf(todo.group) === -1) {
       res.push(todo.group);
     }
   });
@@ -106,11 +111,7 @@ const groups = (queryString: string, cb: any) => {
       <el-button class="img-close" :icon="Close" size="small" circle @click="form.imageUrl.splice(index, 1)" />
     </span>
     <template #footer>
-      <el-button @click="visible = false">取消</el-button>
-      <!-- <el-button type="primary" :loading="loading" @click="onClick">{{
-        loading ? 'Submitting ...' : 'Submit'
-      }}</el-button> -->
-      <el-button type="primary" @click="handleConfirm">确定</el-button>
+      <el-button type="primary" @click="handleConfirm">添加</el-button>
     </template>
   </el-drawer>
 </template>

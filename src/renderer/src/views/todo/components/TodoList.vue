@@ -25,7 +25,7 @@ const emits = defineEmits(['onEdit']);
     </template>
     <span :class="{'content-completion': todo.completion}">
       <div>
-        <span v-if="todo.group !== '' && todo.group !== undefined">【{{ todo.group }}】</span>
+        <span v-if="todo.group !== '' && todo.group !== null">【{{ todo.group }}】</span>
         <span>{{ todo.content }}</span>
       </div>
       <el-image

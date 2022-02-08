@@ -1,8 +1,8 @@
 export interface Todo {
-  id?: number;
-  content?: string;
-  group?: string;
-  completion?: boolean;
+  id: number;
+  content: string;
+  group: string | null;
+  completion: boolean;
   imageUrl: string[];
 }
 

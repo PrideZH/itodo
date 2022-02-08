@@ -12,8 +12,30 @@ const drawer = ref<InstanceType<typeof Drawer>>();
 
 const active = ['do'];
 
-const doList = computed(() => todoStore.getTodos.filter((item: Todo) => !item.completion));
-const doneList = computed(() => todoStore.getTodos.filter((item: Todo) => item.completion));
+const searchContent = ref<string>('');
+const groupSelect = ref<string>('全部');
+
+const dataList = computed(() => todoStore.getTodos.filter((item: Todo) => {
+  let flag: boolean = item.content.indexOf(searchContent.value) !== -1;
+  if (groupSelect.value === '全部') {
+  } else if (groupSelect.value === '未分组') {
+    flag = flag && (item.group === '' || item.group === null);
+  } else {
+    flag = flag && item.group === groupSelect.value;
+  }
+  return flag;
+}));
+const doList = computed(() => dataList.value.filter((item: Todo) => !item.completion));
+const doneList = computed(() => dataList.value.filter((item: Todo) => item.completion));
+const groups = computed(() => {
+  const res: string[] = ['全部', '未分组'];
+  todoStore.getTodos.forEach(todo => {
+    if (todo.group !== '' && todo.group !== null && res.indexOf(todo.group) === -1) {
+      res.push(todo.group);
+    }
+  });
+  return res;
+});
 
 const onEdit = (todo: Todo) => drawer.value?.open(todo);
 </script>
@@ -22,9 +44,10 @@ const onEdit = (todo: Todo) => drawer.value?.open(todo);
   <el-space>
     <el-button type="primary" @click="drawer?.open(null)">添加计划</el-button>
     <el-button type="danger" @click="todoStore.clearDone()">清空已完成</el-button>
-    <div class="search">
-      <el-input placeholder="搜索" :suffix-icon="Search" />
-    </div>
+    <el-input placeholder="搜索" :suffix-icon="Search" v-model="searchContent" />
+    <el-select v-model="groupSelect">
+      <el-option v-for="group in groups" :key="group" :label="group" :value="group" />
+    </el-select>
   </el-space>
 
   <el-collapse class="main" v-model="active">

@@ -30,10 +30,7 @@ const onChange = (todo: Todo) => {
       <el-checkbox v-model="todo.completion" @change="onChange(todo)"/>
     </template>
     <span :class="{'content-completion': todo.completion}">
-      <div>
-        <span v-if="todo.group !== '' && todo.group !== null">【{{ todo.group }}】</span>
-        <span>{{ todo.content }}</span>
-      </div>
+      <div>{{ todo.content }}</div>
       <el-image
         class="img"
         v-for="url in todo.imageUrl"
@@ -43,6 +40,9 @@ const onChange = (todo: Todo) => {
       />
     </span>
     <div>
+      <span v-if="todo.group !== '' && todo.group !== null" class="todo-group">
+        {{ todo.group }}
+      </span>
       <span v-if="todo.completionTime" class="todo-time">
         <el-icon><Clock /></el-icon>
         {{ dateFormat(todo.completionTime, 'yyyy-MM-dd hh:mm:ss') }}
@@ -71,6 +71,15 @@ const onChange = (todo: Todo) => {
   margin-right: 16px;
   border: 1px solid #eee;
   border-radius: 4px;
+}
+
+.todo-group {
+  padding: 0 8px;
+  color: #eee;
+  background-color: #409eff;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .todo-time {

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Search } from '@element-plus/icons-vue';
 import { RouteRecordNormalized, useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -11,16 +10,13 @@ const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name
   <el-container class="container">
     <el-aside class="aside" width="180px">
       <!-- <div class="introduce">
-        <el-avatar src="https://empty">
+        <el-avatar>
           <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
         </el-avatar>
         Nickname
         Username
       </div> -->
-      <div class="search">
-        <el-input placeholder="搜索" :suffix-icon="Search" />
-      </div>
-      <el-menu class="menu" router>
+      <el-menu class="menu" default-active="/todo" router>
         <el-menu-item v-for="menuItem in rootRoute.children" :key="menuItem.path" :index="`/${menuItem.path}`">
           <el-icon><svg viewBox="0 0 1024 1024">
             <path v-for="(iconSvg, index) in (menuItem.meta?.icon as string[])" :key="index" fill="currentColor" :d="iconSvg"></path>
@@ -59,10 +55,21 @@ const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name
   border-right: none;
 }
 
+.menu >>> .el-menu-item {
+  height: 40px;
+  margin: 8px 16px;
+  border-radius: 12px;
+}
+
+.menu >>> .is-active {
+  color: #fff;
+  background-color: #409eff;
+}
+
 .main {
   padding: 32px;
   margin: 0;
   border-radius: 8px;
-  background-color: #cde2e9;
+  background-color: var(--bgColor);
 }
 </style>

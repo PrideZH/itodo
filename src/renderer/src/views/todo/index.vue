@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
 import Drawer from './components/Drawer.vue';
-import { Todo } from '../../types/global';
-import { useTodoStore } from '../../store';
 import TodoList from './components/TodoList.vue';
+import { computed, ref } from 'vue';
+import { Todo } from '../../types/global';
+import { Search } from '@element-plus/icons-vue';
+import { useTodoStore } from '../../store';
 
 const todoStore = useTodoStore();
 
@@ -18,8 +19,13 @@ const onEdit = (todo: Todo) => drawer.value?.open(todo);
 </script>
 
 <template>
-  <el-button type="primary" @click="drawer?.open(null)">添加计划</el-button>
-  <el-button type="danger" @click="todoStore.clearDone()">清空已完成</el-button>
+  <el-space>
+    <el-button type="primary" @click="drawer?.open(null)">添加计划</el-button>
+    <el-button type="danger" @click="todoStore.clearDone()">清空已完成</el-button>
+    <div class="search">
+      <el-input placeholder="搜索" :suffix-icon="Search" />
+    </div>
+  </el-space>
 
   <el-collapse class="main" v-model="active">
     <el-collapse-item class="collapse-item" name="do">
@@ -54,7 +60,7 @@ const onEdit = (todo: Todo) => drawer.value?.open(todo);
 }
 
 .main >>> .el-collapse-item__header, .main >>> .el-collapse-item__wrap {
-  background-color: #cde2e9;
+  background-color: var(--bgColor);
 }
 
 .main >>> .el-collapse-item__header {
@@ -66,7 +72,7 @@ const onEdit = (todo: Todo) => drawer.value?.open(todo);
 }
 
 .title {
-  color: #29262e;
+  color: var(--textColor);
   font-size: 24px;
   font-weight: 700;
 }

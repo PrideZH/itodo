@@ -24,6 +24,7 @@ declare module 'vue' {
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
+    ElSpace: typeof import('element-plus/es')['ElSpace']
     ListItem: typeof import('./src/components/ListItem.vue')['default']
   }
 }

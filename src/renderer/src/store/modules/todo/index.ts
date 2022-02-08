@@ -62,6 +62,11 @@ export const useTodoStore = defineStore('todo', {
         }
       }
       return false;
+    },
+
+    clearDone() {
+      this.todos = this.todos.filter(todo => !todo.completion);
+      localStorage.setItem('todo', JSON.stringify(this.todos));
     }
   }
 });

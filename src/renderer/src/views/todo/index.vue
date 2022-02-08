@@ -18,7 +18,8 @@ const onEdit = (todo: Todo) => drawer.value?.open(todo);
 </script>
 
 <template>
-  <el-button @click="drawer?.open(null)">添加计划</el-button>
+  <el-button type="primary" @click="drawer?.open(null)">添加计划</el-button>
+  <el-button type="danger" @click="todoStore.clearDone()">清空已完成</el-button>
 
   <el-collapse class="main" v-model="active">
     <el-collapse-item class="collapse-item" name="do">

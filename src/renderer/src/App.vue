@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { MINUTES } from './utils/dateUtil';
-import { computed } from 'vue';
 import { notice } from './utils/noticeUtil';
 import { useTaskStore } from './store';
 
 const taskStore = useTaskStore();
-const tasks = computed(() => taskStore.getTasks);
 
 // 在整分启动定时 每一分钟检测事件
 setTimeout(() => {
   setInterval(() => {
     const nowDate = new Date();
-    tasks.value.forEach(task => {
+    taskStore.tasks.forEach(task => {
       if (!task.enable || task.dateTime === undefined) return;
       if (task.dateTime <= nowDate) {
         notice('任务提醒', task.content || '');

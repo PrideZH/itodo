@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Calendar, Delete, Edit } from '@element-plus/icons-vue'
-import { computed, ref } from 'vue';
+import { Calendar, Check, Delete, Edit } from '@element-plus/icons-vue'
+import { ref } from 'vue';
 import ListItem from '../../components/ListItem.vue';
 import { useTaskStore } from '../../store';
 import Drawer from './components/Drawer.vue';
@@ -8,7 +8,6 @@ import Drawer from './components/Drawer.vue';
 const drawer = ref<InstanceType<typeof Drawer>>();
 
 const taskStore = useTaskStore();
-const tasks = computed(() => taskStore.getTasks);
 
 const dateFormat = (date: Date): string => {
   date = new Date(date);
@@ -34,9 +33,9 @@ const dateFormat = (date: Date): string => {
 </script>
 
 <template>
-  <el-button @click="drawer?.open(null)">添加任务</el-button>
+  <el-button type="primary" @click="drawer?.open(null)">添加任务</el-button>
 
-  <ListItem v-for="task in tasks" :key="task.id">
+  <ListItem v-for="task in taskStore.tasks" :key="task.id">
     <template #header>
       <el-checkbox v-model="task.enable" @change="taskStore.set(task)" />
     </template>
@@ -46,6 +45,13 @@ const dateFormat = (date: Date): string => {
       {{ dateFormat(task.dateTime) }}
     </div>
     <template #footer>
+      <el-button
+        type="success"
+        :icon="Check"
+        size="small"
+        circle
+        @click="task.dateTime = new Date(task.dateTime?.getTime() + (task.repeat || 0) * 1000 * 60)"
+      />
       <el-button type="primary" :icon="Edit" size="small" circle @click="drawer?.open(task)" />
       <el-button type="danger" :icon="Delete" size="small" circle @click="taskStore.del(task.id)" />
     </template>

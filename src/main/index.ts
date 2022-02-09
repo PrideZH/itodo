@@ -15,6 +15,8 @@ let win: BrowserWindow | null = null
 
 async function createWindow() {
   win = new BrowserWindow({
+    minWidth: 720,
+    minHeight: 400,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
     },

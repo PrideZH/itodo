@@ -5,6 +5,7 @@ import { computed, ref } from 'vue';
 import { Todo } from '../../types/global';
 import { Search } from '@element-plus/icons-vue';
 import { useTodoStore } from '../../store';
+import { ElMessage } from 'element-plus';
 
 const todoStore = useTodoStore();
 
@@ -15,7 +16,7 @@ const active = ['do'];
 const searchContent = ref<string>('');
 const groupSelect = ref<string>('全部');
 
-const dataList = computed(() => todoStore.getTodos.filter((item: Todo) => {
+const dataList = computed(() => todoStore.todos.filter((item: Todo) => {
   let flag: boolean = item.content.indexOf(searchContent.value) !== -1;
   if (groupSelect.value === '全部') {
   } else if (groupSelect.value === '未分组') {
@@ -28,8 +29,8 @@ const dataList = computed(() => todoStore.getTodos.filter((item: Todo) => {
 const doList = computed(() => dataList.value.filter((item: Todo) => !item.completion));
 const doneList = computed(() => dataList.value.filter((item: Todo) => item.completion));
 const groups = computed(() => {
-  const res: string[] = ['全部', '未分组'];
-  todoStore.getTodos.forEach(todo => {
+  const res: string[] = [];
+  todoStore.todos.forEach(todo => {
     if (todo.group !== '' && todo.group !== null && res.indexOf(todo.group) === -1) {
       res.push(todo.group);
     }
@@ -37,15 +38,26 @@ const groups = computed(() => {
   return res;
 });
 
+const onAdd = () => {
+  if (groupSelect.value !== '全部' && groupSelect.value !== '未分组') drawer.value?.open(null, {group: groupSelect.value});
+  else drawer.value?.open(null)
+};
 const onEdit = (todo: Todo) => drawer.value?.open(todo);
+const onClear = () => {
+  const cnt = todoStore.clearDone();
+  if (cnt) ElMessage.success({message: `成功清除 ${cnt} 条已完成待办`, offset: 80});
+  else ElMessage.info({message: '当前没有已完成待办', offset: 80});
+};
 </script>
 
 <template>
   <el-space>
-    <el-button type="primary" @click="drawer?.open(null)">添加计划</el-button>
-    <el-button type="danger" @click="todoStore.clearDone()">清空已完成</el-button>
+    <el-button type="primary" @click="onAdd">添加计划</el-button>
+    <el-button type="danger" @click="onClear">清空已完成</el-button>
     <el-input placeholder="搜索" :suffix-icon="Search" v-model="searchContent" />
     <el-select v-model="groupSelect">
+      <el-option label="全部" value="全部" />
+      <el-option label="未分组" value="未分组" />
       <el-option v-for="group in groups" :key="group" :label="group" :value="group" />
     </el-select>
   </el-space>

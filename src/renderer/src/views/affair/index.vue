@@ -2,20 +2,19 @@
 import Drawer from './components/Drawer.vue';
 import ListItem from '../../components/ListItem.vue';
 import { Calendar, Delete, Edit } from '@element-plus/icons-vue'
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { dateFormat } from '../../utils/dateUtil';
 import { useAffairStore } from '../../store';
 
 const drawer = ref<InstanceType<typeof Drawer>>();
 
 const affairStore = useAffairStore();
-const affairs = computed(() => affairStore.getAffairs);
 </script>
 
 <template>
-  <el-button @click="drawer?.open(null)">添加任务</el-button>
+  <el-button type="primary" @click="drawer?.open(null)">添加事件</el-button>
 
-  <ListItem v-for="affair in affairs" :key="affair.id">
+  <ListItem v-for="affair in affairStore.affairs" :key="affair.id">
     <div>{{ affair.content }}</div>
     <div class="time" v-if="affair.dateTime">
       <el-icon><Calendar /></el-icon>

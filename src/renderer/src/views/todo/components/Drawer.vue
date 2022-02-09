@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { useTodoStore } from '../../../store';
 import { ElMessage } from 'element-plus';
-import { Todo } from 'src/renderer/src/types/global';
+import { Todo, TodoOption } from 'src/renderer/src/types/global';
 import { Close } from '@element-plus/icons-vue';
 
 const todoStore = useTodoStore();
-const todos = computed(() => todoStore.getTodos);
 
 const createTodoDefault = (): Todo => ({
   id: 0,
@@ -20,17 +19,20 @@ const createTodoDefault = (): Todo => ({
 const visible = ref<boolean>(false);
 const form = ref<Todo>(createTodoDefault());
 
-let model: 'create' | 'update' = 'create';
+const model = ref<'create' | 'update'>('create');
 
-const open = (todo: Todo | null) => {
+const open = (todo: Todo | null, option?: TodoOption) => {
   if (todo !== null) {
-    model = 'update';
+    model.value = 'update';
     form.value = { ...todo };
   } else {
-    model = 'create';
+    model.value = 'create';
     // 上一次为编辑时时重置数据 为添加时保留数据
     if (form.value.id !== 0) {
       form.value = createTodoDefault();
+    }
+    if (option !== undefined) {
+      if (option.group) form.value.group = option.group;
     }
   }
   visible.value = true;
@@ -65,14 +67,14 @@ const closed = () => {
 
 const handleConfirm = () => {
   if (form.value.content?.trim() === '') {
-    ElMessage.warning("内容不能为空"); return;
+    ElMessage.warning({message: '内容不能为空', offset: 80}); return;
   }
   const todo: Todo = { ...form.value };
-  if (model === 'create') {
+  if (model.value === 'create') {
     todo.id = new Date().getTime();
     todoStore.add(todo);
     form.value = createTodoDefault();
-    ElMessage.success('添加成功');
+    ElMessage.success({message: '添加成功', offset: 80});
   } else {
     todoStore.set(todo);
   }
@@ -81,8 +83,11 @@ const handleConfirm = () => {
 
 const groups = (queryString: string, cb: any) => {
   const res: string[] = [];
-  todos.value.forEach(todo => {
-    if (todo.group !== '' && todo.group !== null && res.indexOf(todo.group) === -1) {
+  todoStore.todos.forEach(todo => {
+    if (todo.group !== ''
+        && todo.group !== null
+        && todo.group.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        && res.indexOf(todo.group) === -1) {
       res.push(todo.group);
     }
   });
@@ -112,7 +117,7 @@ const groups = (queryString: string, cb: any) => {
       <el-button class="img-close" :icon="Close" size="small" circle @click="form.imageUrl.splice(index, 1)" />
     </span>
     <template #footer>
-      <el-button type="primary" @click="handleConfirm">添加</el-button>
+      <el-button type="primary" @click="handleConfirm">{{ model === 'create' ? '添加' : '修改' }}</el-button>
     </template>
   </el-drawer>
 </template>

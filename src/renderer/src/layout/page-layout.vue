@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { RouteRecordNormalized, useRouter } from 'vue-router';
+import { AlarmClock, Calendar, List } from '@element-plus/icons-vue';
+import { useAffairStore, useTaskStore, useTodoStore } from '../store';
 
-const router = useRouter();
-
-const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name === 'root') as RouteRecordNormalized;
+const todoStore = useTodoStore();
+const affairStore = useAffairStore();
+const taksStore = useTaskStore();
 </script>
 
 <template>
@@ -17,11 +18,20 @@ const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name
         Username
       </div> -->
       <el-menu class="menu" default-active="/todo" router>
-        <el-menu-item v-for="menuItem in rootRoute.children" :key="menuItem.path" :index="`/${menuItem.path}`">
-          <el-icon><svg viewBox="0 0 1024 1024">
-            <path v-for="(iconSvg, index) in (menuItem.meta?.icon as string[])" :key="index" fill="currentColor" :d="iconSvg"></path>
-          </svg></el-icon>
-          <span>{{ menuItem.meta?.locale || '' }}</span>
+        <el-menu-item index="/todo">
+          <el-icon class="icon"><List /></el-icon>
+          <span style="flex: 1;">待办</span>
+          <span class="count" v-if="todoStore.todos.length !== 0">{{ todoStore.todos.length }}</span>
+        </el-menu-item>
+        <el-menu-item index="/affair">
+          <el-icon class="icon"><Calendar /></el-icon>
+          <span style="flex: 1;">事情</span>
+          <span class="count" v-if="affairStore.affairs.length !== 0">{{ affairStore.affairs.length }}</span>
+        </el-menu-item>
+        <el-menu-item index="/task">
+          <el-icon class="icon"><AlarmClock /></el-icon>
+          <span style="flex: 1;">任务</span>
+          <span class="count" v-if="taksStore.tasks.length !== 0">{{ taksStore.tasks.length }}</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -64,6 +74,23 @@ const rootRoute: RouteRecordNormalized = router.getRoutes().find((el) => el.name
 .menu >>> .is-active {
   color: #fff;
   background-color: #409eff;
+}
+
+.icon {
+  color: #409eff;
+}
+
+.menu >>> .is-active .icon {
+  color: #fff;
+}
+
+.count {
+  padding: 6px;
+  height: 8px;
+  border-radius: 12px;
+  line-height: 8px;
+  color: #409eff;
+  background-color: #fff;
 }
 
 .main {

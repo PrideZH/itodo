@@ -1,7 +1,7 @@
 import { createPinia } from 'pinia';
-import { useTaskStore } from './modules/task';
-import { useAffairStore } from './modules/affair';
-import { useTodoStore } from './modules/todo';
+import { useTaskStore } from './task';
+import { useAffairStore } from './affair';
+import { useTodoStore } from './todo';
 
 const pinia = createPinia();
 

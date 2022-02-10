@@ -11,6 +11,7 @@ const createTodoDefault = (): Todo => ({
   id: 0,
   content: '',
   steps: [],
+  star: false,
   group: '',
   imageUrl: [],
   completion: false,

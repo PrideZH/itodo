@@ -3,9 +3,12 @@ import { Ref, ref } from 'vue';
 import { Todo } from '../types/global';
 
 const cmp = (a: Todo, b: Todo) => {
-  if (a.completionTime === null) return 1;
-  if (b.completionTime === null) return -1;
-  return b.completionTime.getTime() - a.completionTime.getTime();
+  if (a.completionTime === null && a.completionTime === null) {
+    return a.star ? -1 : 1;
+  } else if (a.completionTime !== null && b.completionTime !== null) {
+    return b.completionTime.getTime() - a.completionTime.getTime();
+  }
+  return a.completionTime === null ? 1 : -1;
 }
 
 export const useTodoStore = defineStore('todo', () => {

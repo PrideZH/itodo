@@ -2,6 +2,7 @@ export interface Todo {
   id: number;
   content: string;
   steps: Step[];
+  star: boolean;
   group: string | null;
   imageUrl: string[];
   completion: boolean;

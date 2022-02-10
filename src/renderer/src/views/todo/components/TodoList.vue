@@ -3,7 +3,7 @@ import ListItem from '../../../components/ListItem.vue';
 import { useTodoStore } from '../../../store';
 import { Todo } from '../../../types/global';
 import { computed } from 'vue';
-import { Clock, Delete, Edit } from '@element-plus/icons-vue';
+import { Clock, Delete, Edit, Star } from '@element-plus/icons-vue';
 import { dateFormat } from '../../../utils/dateUtil';
 
 const todoStore = useTodoStore();
@@ -22,6 +22,11 @@ const onChange = (todo: Todo) => {
   todo.completionTime = todo.completion ? new Date() : null;
   todoStore.set(todo);
 }
+
+const onClickStar = (todo: Todo) => {
+  todo.star = !todo.star;
+  todoStore.set(todo);
+};
 </script>
 
 <template>
@@ -55,6 +60,7 @@ const onChange = (todo: Todo) => {
       </span>
     </el-space>
     <template #footer>
+      <el-button :type="todo.star ? 'warning' : ''" :icon="Star" size="small" circle @click="onClickStar(todo)" />
       <el-button type="primary" :icon="Edit" size="small" circle @click="emits('onEdit', todo)" />
       <el-popconfirm title="是否删除？" @confirm="todoStore.del(todo.id)">
         <template #reference>

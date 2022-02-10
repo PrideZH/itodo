@@ -29,17 +29,23 @@ const onChange = (todo: Todo) => {
     <template #header>
       <el-checkbox v-model="todo.completion" @change="onChange(todo)"/>
     </template>
-    <span :class="{'content-completion': todo.completion}">
-      <div>{{ todo.content }}</div>
-      <el-image
-        class="img"
-        v-for="url in todo.imageUrl"
-        :src="url"
-        :preview-src-list="todo.imageUrl"
-        fit="cover"
-      />
-    </span>
-    <div>
+    <div :class="{'completion-text': todo.completion}">
+      <div class="content">{{ todo.content }}</div>
+      <div v-for="step in todo.steps">
+        <el-checkbox v-model="step.completion" @change="onChange(todo)"/>
+        <span :class="{'completion-text': step.completion}">{{ step.content }}</span>
+      </div>
+      <div>
+        <el-image
+          class="img"
+          v-for="url in todo.imageUrl"
+          :src="url"
+          :preview-src-list="todo.imageUrl"
+          fit="cover"
+        />
+      </div>
+    </div>
+    <el-space>
       <span v-if="todo.group !== '' && todo.group !== null" class="todo-group">
         {{ todo.group }}
       </span>
@@ -47,7 +53,7 @@ const onChange = (todo: Todo) => {
         <el-icon><Clock /></el-icon>
         {{ dateFormat(todo.completionTime, 'yyyy-MM-dd hh:mm:ss') }}
       </span>
-    </div>
+    </el-space>
     <template #footer>
       <el-button type="primary" :icon="Edit" size="small" circle @click="emits('onEdit', todo)" />
       <el-popconfirm title="是否删除？" @confirm="todoStore.del(todo.id)">
@@ -60,7 +66,11 @@ const onChange = (todo: Todo) => {
 </template>
 
 <style scoped>
-.content-completion {
+.content {
+  font-size: 16px;
+}
+
+.completion-text {
   color: #999999;
   text-decoration: line-through;
 }

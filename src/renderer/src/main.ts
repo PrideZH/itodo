@@ -11,6 +11,3 @@ app.use(router);
 app.use(store);
 
 app.mount('#app').$nextTick(window.removeLoading)
-
-console.log('fs', window.fs)
-console.log('ipcRenderer', window.ipcRenderer)

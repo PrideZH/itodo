@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useTaskStore } from '../../../store';
 import { ElMessage } from 'element-plus';
-import { Task } from 'src/renderer/src/types/global';
+import { Task } from '../../../types/global';
 
 const taskStore = useTaskStore();
 

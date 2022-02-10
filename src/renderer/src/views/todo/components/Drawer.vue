@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useTodoStore } from '../../../store';
 import { ElMessage } from 'element-plus';
-import { Todo, TodoOption } from 'src/renderer/src/types/global';
+import { Step, Todo, TodoOption } from '../../../types/global';
 import { Close } from '@element-plus/icons-vue';
 
 const todoStore = useTodoStore();
@@ -10,6 +10,7 @@ const todoStore = useTodoStore();
 const createTodoDefault = (): Todo => ({
   id: 0,
   content: '',
+  steps: [],
   group: '',
   imageUrl: [],
   completion: false,
@@ -18,6 +19,7 @@ const createTodoDefault = (): Todo => ({
 
 const visible = ref<boolean>(false);
 const form = ref<Todo>(createTodoDefault());
+const formRef = ref();
 
 const model = ref<'create' | 'update'>('create');
 
@@ -66,19 +68,21 @@ const closed = () => {
 }
 
 const handleConfirm = () => {
-  if (form.value.content?.trim() === '') {
-    ElMessage.warning({message: '内容不能为空', offset: 80}); return;
-  }
-  const todo: Todo = { ...form.value };
-  if (model.value === 'create') {
-    todo.id = new Date().getTime();
-    todoStore.add(todo);
-    form.value = createTodoDefault();
-    ElMessage.success({message: '添加成功', offset: 80});
-  } else {
-    todoStore.set(todo);
-  }
-  visible.value = false;
+  if (!formRef.value) return;
+  formRef.value.validate((valid: boolean | undefined) => {
+    if (valid) {
+      const todo: Todo = { ...form.value };
+      if (model.value === 'create') {
+        todo.id = new Date().getTime();
+        todoStore.add(todo);
+        form.value = createTodoDefault();
+        ElMessage.success({message: '添加成功', offset: 80});
+      } else {
+        todoStore.set(todo);
+      }
+      visible.value = false;
+    }
+  });
 };
 
 const groups = (queryString: string, cb: any) => {
@@ -93,16 +97,43 @@ const groups = (queryString: string, cb: any) => {
   });
   cb(res.map(item => ({value: item})));
 }
+
+const addStep = () => {
+  form.value.steps.push({
+    id: Date.now(),
+    content: '',
+    completion: false
+  })
+}
+
+const removeStep = (step: Step) => {
+  const index = form.value.steps.indexOf(step)
+  if (index !== -1) {
+    form.value.steps.splice(index, 1);
+  }
+}
 </script>
 
 <template>
   <el-drawer v-model="visible" :title="model === 'create' ? '添加计划' : '修改计划'" @opened="opened" @closed="closed">
-    <el-form>
-      <el-form-item label="内容">
+    <el-form ref="formRef" :model="form">
+      <el-form-item prop="content" label="内容" :rules="{ required: true, message: '不能为空', trigger: 'blur' }">
         <el-input placeholder="可粘贴图片..." class="content-input" v-model="form.content" type="textarea" />
       </el-form-item>
-    </el-form>
-    <el-form>
+      <el-form-item
+        v-for="(step, index) in form.steps" :key="step.id"
+        label="步骤"
+        :prop="'steps.' + index + '.content'"
+        :rules="{ required: true, message: '不能为空', trigger: 'blur' }"
+      >
+        <el-space>
+          <el-input v-model="step.content" type="textarea" />
+          <el-button type="text" @click.prevent="removeStep(step)">删除</el-button>
+        </el-space>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="text" @click.prevent="addStep()">+ 添加步骤</el-button>
+      </el-form-item>
       <el-form-item label="分组">
         <el-autocomplete placeholder="默认" :fetch-suggestions="groups" v-model="form.group" />
       </el-form-item>

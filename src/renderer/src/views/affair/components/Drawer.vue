@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useAffairStore } from '../../../store';
 import { ElMessage } from 'element-plus';
-import { Affair } from 'src/renderer/src/types/global';
+import { Affair } from '../../../types/global';
 
 const affairStore = useAffairStore();
 

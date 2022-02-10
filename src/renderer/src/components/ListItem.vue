@@ -31,6 +31,12 @@
 
 .body {
   flex: 1;
+  min-width: 100px;
   padding: 0 16px;
+  word-wrap: break-word;
+}
+
+.footer {
+  white-space: nowrap;
 }
 </style>

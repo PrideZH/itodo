@@ -1,10 +1,17 @@
 export interface Todo {
   id: number;
   content: string;
+  steps: Step[];
   group: string | null;
   imageUrl: string[];
   completion: boolean;
   completionTime: Date | null;
+}
+
+export interface Step {
+  id: number;
+  content: string;
+  completion: boolean;
 }
 
 export interface TodoOption {

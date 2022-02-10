@@ -27,7 +27,7 @@ const model = ref<'create' | 'update'>('create');
 const open = (todo: Todo | null, option?: TodoOption) => {
   if (todo !== null) {
     model.value = 'update';
-    form.value = { ...todo };
+    form.value = JSON.parse(JSON.stringify(todo));
   } else {
     model.value = 'create';
     // 上一次为编辑时时重置数据 为添加时保留数据

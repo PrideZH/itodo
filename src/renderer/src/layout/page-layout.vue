@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AlarmClock, Calendar, List } from '@element-plus/icons-vue';
+import { AlarmClock, Calendar, List, Setting } from '@element-plus/icons-vue';
 import { useAffairStore, useTaskStore, useTodoStore } from '../store';
 
 const todoStore = useTodoStore();
@@ -34,6 +34,9 @@ const taksStore = useTaskStore();
           <span class="count" v-if="taksStore.tasks.length !== 0">{{ taksStore.tasks.length }}</span>
         </el-menu-item>
       </el-menu>
+      <div class="tool-box">
+        <el-button type="text" :icon="Setting">设置</el-button>
+      </div>
     </el-aside>
     <el-main class="main">
       <router-view />
@@ -98,5 +101,9 @@ const taksStore = useTaskStore();
   margin: 0;
   border-radius: 8px;
   background-color: var(--bgColor);
+}
+
+.tool-box {
+  padding: 8px 16px;
 }
 </style>

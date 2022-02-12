@@ -27,6 +27,17 @@ const onClickStar = (todo: Todo) => {
   todo.star = !todo.star;
   todoStore.set(todo);
 };
+
+const content = computed(() => {
+  return (content: string) => {
+    const reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
+    content = content.replace(new RegExp(/</g), '&lt;');
+    content = content.replace(new RegExp(/>/g), '&gt;');
+    content = content.replace(new RegExp(/ /g), '&nbsp;');
+    content = content.replaceAll(/\n/g,'<br/>');
+    return content.replace(reg, '<a href="javascript:void(0)" onclick=window.shell.openExternal("$1$2")>$1$2</a>');
+  };
+});
 </script>
 
 <template>
@@ -35,10 +46,10 @@ const onClickStar = (todo: Todo) => {
       <el-checkbox v-model="todo.completion" @change="onChange(todo)"/>
     </template>
     <div :class="{'completion-text': todo.completion}">
-      <div class="content">{{ todo.content }}</div>
+      <div class="content" v-html="content(todo.content)" />
       <div v-for="step in todo.steps">
         <el-checkbox v-model="step.completion" @change="onChange(todo)"/>
-        <span :class="{'completion-text': step.completion}">{{ step.content }}</span>
+        <span :class="{'completion-text': step.completion}" v-html="content(step.content)" />
       </div>
       <div>
         <el-image
@@ -74,6 +85,11 @@ const onClickStar = (todo: Todo) => {
 <style scoped>
 .content {
   font-size: 16px;
+}
+
+.content >>> a {
+  text-decoration: none;
+  font-size: 12px;
 }
 
 .completion-text {

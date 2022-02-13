@@ -15,6 +15,7 @@ export const useTodoStore = defineStore('todo', () => {
   // 获取数据
   const todoJson: string | null = localStorage.getItem('todo');
   const todos: Ref<Todo[]> = ref<Todo[]>(todoJson ? JSON.parse(todoJson) : []);
+
   todos.value.forEach(todo => todo.completionTime !== null ? todo.completionTime = new Date(todo.completionTime) : null);
 
   todos.value.sort(cmp);

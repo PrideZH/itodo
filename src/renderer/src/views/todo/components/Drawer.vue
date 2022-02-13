@@ -133,7 +133,7 @@ const removeStep = (step: Step) => {
         </el-space>
       </el-form-item>
       <el-form-item>
-        <el-button type="text" @click.prevent="addStep()">+ 添加步骤</el-button>
+        <el-button type="text" @click.prevent="addStep()">+ 添加子任务</el-button>
       </el-form-item>
       <el-form-item label="分组">
         <el-autocomplete placeholder="默认" :fetch-suggestions="groups" v-model="form.group" />

@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { AlarmClock, Calendar, List, Setting } from '@element-plus/icons-vue';
+import { computed } from 'vue';
 import { useAffairStore, useTaskStore, useTodoStore } from '../store';
+import { Task, Todo } from '../types/global';
 
 const todoStore = useTodoStore();
 const affairStore = useAffairStore();
 const taksStore = useTaskStore();
+
+const doTodoList = computed(() => todoStore.todos.filter((item: Todo) => !item.completion));
+const doTaskList = computed(() => taksStore.tasks.filter((item: Task) => item.enable));
 </script>
 
 <template>
@@ -21,7 +26,7 @@ const taksStore = useTaskStore();
         <el-menu-item index="/todo">
           <el-icon class="icon"><List /></el-icon>
           <span style="flex: 1;">待办</span>
-          <span class="count" v-if="todoStore.todos.length !== 0">{{ todoStore.todos.length }}</span>
+          <span class="count" v-if="doTodoList.length !== 0">{{ doTodoList.length }}</span>
         </el-menu-item>
         <el-menu-item index="/affair">
           <el-icon class="icon"><Calendar /></el-icon>
@@ -31,7 +36,7 @@ const taksStore = useTaskStore();
         <el-menu-item index="/task">
           <el-icon class="icon"><AlarmClock /></el-icon>
           <span style="flex: 1;">任务</span>
-          <span class="count" v-if="taksStore.tasks.length !== 0">{{ taksStore.tasks.length }}</span>
+          <span class="count" v-if="doTaskList.length !== 0">{{ doTaskList.length }}</span>
         </el-menu-item>
       </el-menu>
       <div class="tool-box">

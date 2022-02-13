@@ -2,6 +2,7 @@
 import { Calendar, Check, Delete, Edit } from '@element-plus/icons-vue'
 import { ref } from 'vue';
 import ListItem from '../../components/ListItem.vue';
+import TextView from '../../components/TextView.vue';
 import { useTaskStore } from '../../store';
 import Drawer from './components/Drawer.vue';
 
@@ -39,7 +40,7 @@ const dateFormat = (date: Date): string => {
     <template #header>
       <el-checkbox v-model="task.enable" @change="taskStore.set(task)" />
     </template>
-    <div>{{ task.content }}</div>
+    <TextView :text="task.content" />
     <div class="task-time" v-if="task.enable && task.dateTime">
       <el-icon><Calendar /></el-icon>
       {{ dateFormat(task.dateTime) }}

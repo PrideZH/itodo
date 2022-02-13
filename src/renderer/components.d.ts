@@ -28,6 +28,7 @@ declare module 'vue' {
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSpace: typeof import('element-plus/es')['ElSpace']
     ListItem: typeof import('./src/components/ListItem.vue')['default']
+    TextView: typeof import('./src/components/TextView.vue')['default']
   }
 }
 

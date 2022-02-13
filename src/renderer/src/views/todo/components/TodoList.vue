@@ -5,6 +5,7 @@ import { Todo } from '../../../types/global';
 import { computed } from 'vue';
 import { Clock, Delete, Edit, Star } from '@element-plus/icons-vue';
 import { dateFormat } from '../../../utils/dateUtil';
+import TextView from '../../../components/TextView.vue';
 
 const todoStore = useTodoStore();
 
@@ -27,17 +28,6 @@ const onClickStar = (todo: Todo) => {
   todo.star = !todo.star;
   todoStore.set(todo);
 };
-
-const content = computed(() => {
-  return (content: string) => {
-    const reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
-    content = content.replace(new RegExp(/</g), '&lt;');
-    content = content.replace(new RegExp(/>/g), '&gt;');
-    content = content.replace(new RegExp(/ /g), '&nbsp;');
-    content = content.replaceAll(/\n/g,'<br/>');
-    return content.replace(reg, '<a href="javascript:void(0)" onclick=window.shell.openExternal("$1$2")>$1$2</a>');
-  };
-});
 </script>
 
 <template>
@@ -46,10 +36,10 @@ const content = computed(() => {
       <el-checkbox v-model="todo.completion" @change="onChange(todo)"/>
     </template>
     <div :class="{'completion-text': todo.completion}">
-      <div class="content" v-html="content(todo.content)" />
-      <div v-for="step in todo.steps">
-        <el-checkbox v-model="step.completion" @change="onChange(todo)"/>
-        <span :class="{'completion-text': step.completion}" v-html="content(step.content)" />
+      <TextView :text="todo.content" />
+      <div class="sub-todo" v-for="step in todo.steps">
+        <el-checkbox class="sub-todo-checkbox" v-model="step.completion" @change="onChange(todo)"/>
+        <TextView :class="{'sub-todo-text': true, 'completion-text': step.completion}" :text="step.content" />
       </div>
       <div>
         <el-image
@@ -90,6 +80,24 @@ const content = computed(() => {
 .content >>> a {
   text-decoration: none;
   font-size: 12px;
+}
+
+.sub-todo {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin: 4px 0;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.sub-todo-checkbox {
+  margin-right: 4px;
+}
+
+.sub-todo-text {
+  flex: 1;
+  min-width: 200px;
 }
 
 .completion-text {

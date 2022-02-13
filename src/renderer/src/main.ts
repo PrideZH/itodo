@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 
 import 'element-plus/theme-chalk/el-message.css';
+import 'element-plus/theme-chalk/el-message-box.css';
 
 const app = createApp(App);
 

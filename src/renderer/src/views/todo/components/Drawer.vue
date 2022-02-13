@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import { useTodoStore } from '../../../store';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { Step, Todo, TodoOption } from '../../../types/global';
 import { Close } from '@element-plus/icons-vue';
 
@@ -38,6 +38,13 @@ const open = (todo: Todo | null, option?: TodoOption) => {
       if (option.group) form.value.group = option.group;
     }
   }
+
+  nextTick(() => {
+    isAlter.value = false;
+    if (formRef.value !== undefined) {
+      formRef.value.clearValidate();
+    }
+  });
   visible.value = true;
 };
 defineExpose({ open });
@@ -66,6 +73,29 @@ const opened = () => {
 
 const closed = () => {
   document.getElementsByClassName('content-input')[0].removeEventListener('paste', pasteEvent)
+}
+
+const isAlter = ref<boolean>(false);
+watch(form, () => isAlter.value = true, { deep: true });
+const handleClose = () => {
+  if (model.value === 'update' && isAlter.value) {
+    ElMessageBox.confirm('是否保存修改?', {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      center: true
+    }).then(() => {
+      formRef.value.validate((valid: boolean | undefined) => {
+        if (valid) {
+          todoStore.set({ ...form.value });
+          visible.value = false;
+        }
+      })
+    }).catch(() => {
+      visible.value = false;
+    });;
+  } else {
+    visible.value = false;
+  }
 }
 
 const handleConfirm = () => {
@@ -116,16 +146,21 @@ const removeStep = (step: Step) => {
 </script>
 
 <template>
-  <el-drawer v-model="visible" :title="model === 'create' ? '添加计划' : '修改计划'" @opened="opened" @closed="closed">
-    <el-form ref="formRef" :model="form">
-      <el-form-item prop="content" label="内容" :rules="{ required: true, message: '不能为空', trigger: 'blur' }">
+  <el-drawer
+    v-model="visible"
+    :title="model === 'create' ? '添加计划' : '修改计划'"
+    :before-close="handleClose"
+    @opened="opened" @closed="closed"
+  >
+    <el-form ref="formRef" :model="form" @keydown.enter.ctrl="handleConfirm">
+      <el-form-item prop="content" label="内容" :rules="{ required: true, message: '不能为空', trigger: 'change' }">
         <el-input placeholder="可粘贴图片..." class="content-input" v-model="form.content" type="textarea" />
       </el-form-item>
       <el-form-item
         v-for="(step, index) in form.steps" :key="step.id"
         label="步骤"
         :prop="'steps.' + index + '.content'"
-        :rules="{ required: true, message: '不能为空', trigger: 'blur' }"
+        :rules="{ required: true, message: '不能为空', trigger: 'change' }"
       >
         <el-space>
           <el-input v-model="step.content" type="textarea" />
@@ -149,7 +184,10 @@ const removeStep = (step: Step) => {
       <el-button class="img-close" :icon="Close" size="small" circle @click="form.imageUrl.splice(index, 1)" />
     </span>
     <template #footer>
-      <el-button type="primary" @click="handleConfirm">{{ model === 'create' ? '添加' : '修改' }}</el-button>
+      <span style="color: #999; margin-right: 8px;">ctrl + enter</span>
+      <el-button type="primary" @click="handleConfirm">
+        {{ model === 'create' ? '添加' : '修改' }}
+      </el-button>
     </template>
   </el-drawer>
 </template>

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { AlarmClock, Calendar, List, Setting } from '@element-plus/icons-vue';
+import { AlarmClock, Calendar, Files, List, Setting } from '@element-plus/icons-vue';
 import { computed } from 'vue';
-import { useAffairStore, useTaskStore, useTodoStore } from '../store';
+import { useAffairStore, useMemoStore, useTaskStore, useTodoStore } from '../store';
 import { Task, Todo } from '../types/global';
 
 const todoStore = useTodoStore();
+const memoStore = useMemoStore();
 const affairStore = useAffairStore();
 const taksStore = useTaskStore();
 
@@ -28,9 +29,14 @@ const doTaskList = computed(() => taksStore.tasks.filter((item: Task) => item.en
           <span style="flex: 1;">待办</span>
           <span class="count" v-if="doTodoList.length !== 0">{{ doTodoList.length }}</span>
         </el-menu-item>
+        <el-menu-item index="/memo">
+          <el-icon class="icon"><Files /></el-icon>
+          <span style="flex: 1;">备忘</span>
+          <span class="count" v-if="memoStore.memos.length !== 0">{{ memoStore.memos.length }}</span>
+        </el-menu-item>
         <el-menu-item index="/affair">
           <el-icon class="icon"><Calendar /></el-icon>
-          <span style="flex: 1;">事情</span>
+          <span style="flex: 1;">日历</span>
           <span class="count" v-if="affairStore.affairs.length !== 0">{{ affairStore.affairs.length }}</span>
         </el-menu-item>
         <el-menu-item index="/task">

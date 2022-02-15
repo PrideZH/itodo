@@ -24,6 +24,10 @@
   min-width: 400px;
 }
 
+.el-card >>> .el-card__body {
+  flex: 1;
+}
+
 .item {
   display: flex;
   align-items: center;

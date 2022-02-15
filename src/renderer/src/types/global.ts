@@ -15,6 +15,11 @@ export interface Step {
   completion: boolean;
 }
 
+export interface Memo {
+  id: number;
+  content: string;
+}
+
 export interface TodoOption {
   id?: number;
   content?: string;
